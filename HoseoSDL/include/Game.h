@@ -1,12 +1,21 @@
 #pragma once
 
 #include "main.h"
+#include "InputHandler.h"
+
+#include "Walker.h"
+
+#include "Object.h"
+#include "Player.h"
 
 #include <vector>
 
 
 class Walker;
 class Vector2D;
+class Object;
+class Player;
+
 
 class Game {
 private:
@@ -40,8 +49,21 @@ private:
     SDL_Renderer* m_pRenderer;
     bool m_bRunning;
 
+
+
+    //여기에 추가 
+
     Vector2D* _mousePos;
     Walker* _walker;
+
+    Object* _obs[5];
+
+    Player* _player;
+  
+
+
+
+
 
     SDL_Texture* mTexture;
     SDL_Rect _srcRect;

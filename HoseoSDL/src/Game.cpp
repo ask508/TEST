@@ -2,9 +2,16 @@
 #define HEIGHT (400)
 
 #include "Game.h"
-#include "InputHandler.h"
 
-#include "Walker.h"
+#include <random>
+
+std::random_device rd;
+std::mt19937_64 rng(rd());
+
+std::uniform_int_distribution<__int64> dist1(0, 600);
+std::uniform_int_distribution<__int64> dist2(0, 400);
+std::uniform_int_distribution<__int64> dist3(8, 32);
+
 
 Game* Game::s_pInstance = 0;
 
@@ -14,52 +21,51 @@ bool Game::setup()
 
   result = init("Nature of Code", 0, 0, WIDTH, HEIGHT, false);
 
-  _walker = new Walker(WIDTH/2,HEIGHT/2);
+  _player = new Player(10,10);
+  for (int i = 0; i < 5; i++)
+  {
+      _obs[i] = new Object(dist1(rng), dist2(rng), dist3(rng));
+  }
 
-
+  _walker = new Walker(WIDTH / 2, HEIGHT / 2, _player, _obs);
+ 
   return result;
 }
 
 void Game::update()
 {
   _walker->update();
+  _player->update();
 
-  SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 255);
 }
       
 void Game::render()
 {
-  SDL_RenderClear(m_pRenderer);  
+    SDL_RenderClear(m_pRenderer);
+    for (int i = 0; i < 5; i++)
+        _obs[i]->draw(m_pRenderer);
 
-  _walker->draw(m_pRenderer);
+    _walker->draw(m_pRenderer);
+    _player->draw(m_pRenderer);
 
+  
+  
   
   SDL_RenderPresent(m_pRenderer); 
 
 
-  // ?¨Í∞Å??Í∑∏Î¶¨Í∏?
-  /*
 
-  SDL_Rect rect[2];
-  rect[0].x = 250;
-  rect[0].y = 150;
-  rect[0].w = 200;
-  rect[0].h = 200;
-
-  rect[1].x = 50;
-  rect[1].y = 150;
-  rect[1].w = 200;
-  rect[1].h = 200;
-
-
-  SDL_RenderDrawRects(renderer, rect,2);
-  */
 }
 
 void Game::clean() 
 {
   delete _walker;
-  
+
+  for (int i = 0; i < 5; i++)
+      delete  _obs[i];
+
+  delete  _player;
+
   TheInputHandler::Instance()->clean();
   
   SDL_DestroyWindow(m_pWindow);
