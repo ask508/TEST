@@ -49,7 +49,7 @@ void Walker::Arrive(Vector2D point)
 	Vector2D taget = point - *pos;
 
 	float dist = taget.length();
-	if (dist>0.3f)
+	if (dist>0)
 	{
 		float DT = 0.3f;
 		float speed = dist / (0.3f * DT);
@@ -84,26 +84,27 @@ void Walker::Hide()
 {
 	//player와 장애물위치를 기준으로 가장 작은 거리의 장애물을 찾고 그장애물로 이동함
 	Vector2D dir(0,0);
-	float min = _MM_FIXUP_MAX_FLOAT;
+	float min = 999999999;
 	int index = 0;
 	for (int i = 0; i < 5; i++)
 	{
 		Vector2D distnace = *_obs[i]->pos - *_p->pos;
-		 dir = distnace;
+		
 		if (min > distnace.length())
 		{
 			min = distnace.length();
 			index = i;
-			
+
+			dir = distnace;
 			dir.normalize();
 
+			dir= (dir * 30.0f) + *_obs[index]->pos;
+
 		}
-		Vector2D aa = *_obs[index]->pos;
-		aa += dir;
 		
 	}
-	Arrive(*_obs[index]->pos);
-
+	//Arrive(*_obs[index]->pos);
+	Arrive(dir);
 
 
 }
